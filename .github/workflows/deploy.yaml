@@ -4,12 +4,13 @@ on:
   push:
     branches:
       - release/1.0
+      - master
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Node.js
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Deploy via SSH
@@ -19,7 +20,7 @@ jobs:
           username: ${{ secrets.SSH_USER_NAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd <path>
+            cd /workspace/nodejs-application-delpoy-github-actions
             git pull 
             docker compose up -d --build
       

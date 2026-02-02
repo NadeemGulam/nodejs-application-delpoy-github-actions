@@ -19,8 +19,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER_NAME }}
           key: ${{ secrets.SSH_KEY }}
+          port: 22
           script: |
             cd /workspace/nodejs-application-delpoy-github-actions
             git pull 
             docker compose up -d --build
-      

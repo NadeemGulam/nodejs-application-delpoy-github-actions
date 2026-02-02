@@ -1,26 +1,31 @@
-name: Deploy NodeJS Application to HomeServer
+name: Deploy to Home Server
 
 on:
   push:
-    branches:
-      - release/1.0
-      - master
+    branches: [ master ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with: 
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER_NAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          script: |
-            cd /workspace/nodejs-application-delpoy-github-actions
-            git pull 
-            docker compose up -d --build
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Connect to Tailscale
+      uses: tailscale/github-action@v2
+      with:
+        oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+        oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+        tags: tag:ci
+    
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: 100.125.217.85
+        username: nadeem-gulam
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd /workspace/nodejs-application-delpoy-github-actions
+          git pull
+          docker compose up -d --build

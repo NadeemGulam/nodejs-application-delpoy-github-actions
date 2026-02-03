@@ -28,6 +28,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           pwd
-          cd /workspace/nodejs-application-delpoy-github-actions
+          cd workspace/nodejs-application-delpoy-github-actions
           git pull
           docker compose up -d --build
